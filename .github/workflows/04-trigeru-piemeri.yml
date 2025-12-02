@@ -1,0 +1,33 @@
+name: 04-trigeru-piemeri
+# Notikumu saraksts, kuri var būt izmantoti kā trigeri
+# https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows
+
+on:
+  push: # push notikums
+    branches: # darbojas tikai uz noteiktā zara
+      - "example-branch/*"
+
+  pull_request: # pull_request notikums
+    ## The default is to trigger on the following types of events:
+    types:  # tikai noteiktiem pull_request tipiem
+      - opened
+      - synchronize
+      - reopened
+    paths:  # tikai noteiktm datnēm
+      # Iekļautās datnes
+      - "04-mape1/*.md"
+      # Izslēgtās datnes
+      - "!04-mape1/*.txt"
+
+  schedule: # regulārais notikums
+    - cron: "0 0 * * *" # Pusnākts UTC
+
+  workflow_dispatch: # trigeris manuālai palaišanai
+jobs:
+  echo-event:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Saglabāt notikuma pilno JSON saturu
+        run: |
+          echo "=== $GITHUB_EVENT_NAME payload ==="
+          cat "$GITHUB_EVENT_PATH"
